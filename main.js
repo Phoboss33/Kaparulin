@@ -1,47 +1,51 @@
+let currentInput = '';
 let display = document.getElementById('display');
+let numberButtons = document.querySelectorAll('.number');
+let operationButtons = document.querySelectorAll('.operation');
+let clearButton = document.querySelector('.clear');
+let calculateButton = document.querySelector('.calculate');
+let isDot = false;
 
-let buttons = Array.from(document.getElementsByClassName('button'));
-let dotClcked = false;
-
-
-buttons.map( button => {
-    button.addEventListener('click', (e) => {
-        switch(e.target.innerText){
-            case 'C':
-                display.innerText = '';
-                dotClicked = false; 
-                break;
-            case '=':
-                try{
-                    display.innerText = eval(display.innerText);
-                } catch {
-                    display.innerText = "Error"
-                }
-                break;
-            case '.':
-                if (!dotClicked) { 
-                    display.innerText += e.target.innerText;
-                    dotClicked = true; 
-                }
-                break;
-            case '+':
-                    display.innerText += e.target.innerText;
-                    dotClicked = false; 
-                break;
-            case '-':
-                    display.innerText += e.target.innerText;
-                    dotClicked = false; 
-                break;
-            case '*':
-                    display.innerText += e.target.innerText;
-                    dotClicked = false; 
-                break;
-            case '/':
-                    display.innerText += e.target.innerText;
-                    dotClicked = false; 
-                break;
-            default:
-                display.innerText += e.target.innerText;
-        }
+numberButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        pressKey(button.value);
     });
 });
+
+operationButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        pressKey(button.value);
+    });
+});
+
+clearButton.addEventListener('click', clearDisplay);
+calculateButton.addEventListener('click', calculateResult);
+
+function pressKey(key) {
+    if (key === '.' && !isDot) {
+        isDot = true;
+        return;
+    }
+    if (key === '.' && (currentInput === '')) {
+        currentInput += '0';
+    }
+    currentInput += key;
+    display.value = currentInput;
+}
+
+function clearDisplay() {
+    currentInput = '';
+    display.value = currentInput;
+}
+
+function calculateResult() {
+    try {
+        currentInput = currentInput.replace(/%/g, '%').replace(/\^/g, '**');
+
+        currentInput = eval(currentInput).toString();
+        display.value = currentInput;
+    } catch (error) {
+        alert('Ошибка в выражении: ' + error);
+        clearDisplay();
+    }
+}
