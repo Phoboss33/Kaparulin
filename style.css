@@ -34,3 +34,10 @@ button {
 button:active {
     background-color: lightgray;
 }
+
+#upperText {
+    display: block;
+    text-align: end;
+    padding-right: 20px;
+    color: #666;
+}
